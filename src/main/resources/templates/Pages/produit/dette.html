@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>lpm.v.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" href="/webjars/bootstrap/5.1.3/css/bootstrap.min.css">
+    <script rel="stylesheet" src="/webjars/bootstrap/5.1.3/js/bootstrap.bundle.js"></script>
+
+    <link href="../assets2/css/icons.min.css" rel="stylesheet" type="text/css">
+    <link href="../liens/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="../liens/remixicon/remixicon.css" rel="stylesheet">
+
+    <link href="../js/print.min.css" rel="stylesheet">
+    <link href="../js/simplebar.css" rel="stylesheet">
+    <link href="../css/styles.css" rel="stylesheet">
+
+</head>
+<body style="background-color: transparent">
+
+    <!-- *********************************************** content *********************************** -->
+
+    <div class="container-fluid" style="height: 100vh;padding-top: 20px">
+
+        <div class="row mb-1">
+            <div class="col-12 mt-1">
+                <div class="boutons_modals head">
+                    <ul class="ul-nav">
+                        <li class="d-flex" style="display: flex;justify-content: left">
+                            <h4 class="page-title">Liste des dettes</h4>
+                        </li>
+                    </ul>
+                    <ul class="ul-nav">
+                        <li class="ul-li-nav search">
+                            <div class="input-group inputSearchStock" id="inputSearch">
+                                <input type="text" required class="form-control dropdown-toggle" placeholder="Search..." id="input-search-dette">
+                                <button id="btn-search-stick" class="input-group-text btn-primary" type="submit"><i class="ri ri-search-2-line"></i></button>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="boutons_modals">
+                <ul class="ul-nav">
+                    <li class="ul-li-nav">
+                        <a class="btn btn-primary" id="btnCreerDette">Créer une avance</a>
+                    </li>
+                    <li class="ul-li-nav">
+                        <a class="btn btn-primary" id="btnReglerDette">Règler une dette</a>
+                    </li>
+                </ul>
+                <ul class="ul-nav">
+                    <li class="ul-li-nav">
+                        <a class="btn btn-primary" id="btnExcelDette"><img src="../images/excel1_24px.png" style="height: 20px;width: 16px"></a>
+                    </li>
+                    <li class="ul-li-nav">
+                        <a class="btn btn-primary" id="btnPrintDette"><img src="../images/print1_24px.png" style="height: 16px"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row" id="utilisateur">
+            <div class="col-12">
+                <div class="card" style="margin: 8px">
+                    <div class="card-body">
+                        <div class="tab-pane show active" id="buttons-table-preview">
+                            <table id="tableDette" class="table dt-responsive nowrap w-100 table-hover text-dark">
+                                <thead>
+                                <tr>
+                                    <th>Référence</th>
+                                    <th>montant</th>
+                                    <th>Fournisseur</th>
+                                    <th>Date</th>
+                                    <th>Déscription</th>
+                                    <th id="checkBoxT" style="min-width: 14px;width: 14px;max-width: 14px;display: none"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="ps-2"  id="checkBoxT" style="min-width: 14px;14px;max-width: 14px;display: none"><input id="checkBoxT" type="checkbox" style="float: right;margin-right: 10px"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="tableCleintImprimer" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-contentClient">
+                    <div class="modal-body"  id="datatable-utilisateurImprimer2">
+                        <h4 align="center" style="alignment: center;height: 40px;width: 100%;font-weight: 700;font-size: 16px;color: #223">LISTE DES DETTES FOURNISSEURS</h4>
+                        <table class="table dt-responsive nowrap w-100 table-hover text-dark">
+                            <thead style="background-color: #aaa">
+                            <tr>
+                                <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Référence</th>
+                                <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Montant</th>
+                                <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Fournisseur</th>
+                                <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Date</th>
+                                <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Motifs</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td style="border: 0.2px solid transparent;border-bottom-color: #eee;border-bottom-width: 2px;"></td>
+                                <td style="border: 0.2px solid transparent;border-bottom-color: #eee;border-bottom-width: 2px;"></td>
+                                <td style="border: 0.2px solid transparent;border-bottom-color: #eee;border-bottom-width: 2px;"></td>
+                                <td style="border: 0.2px solid transparent;border-bottom-color: #eee;border-bottom-width: 2px;"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Standard modal -->
+
+        <!-- /.modal -->
+
+    </div> <!-- container -->
+
+    <!-------------------------------------------------------------------- script ------------------------------->
+
+    <script src="../liens/js/jquery-3.5.1.min.js"></script>
+    <script src="../js/table2excel.js"></script>
+    <script src="../js/print.min.js"></script>
+    <script src="../js/simplebar.min.js"></script>
+    <script src="../js/main.js"></script>
+
+    <script>
+
+        /* *************************** filtrage du tableau par mot cle ************************************ */
+        var inputSearch = document.getElementById("input-search-dette");
+        inputSearch.addEventListener("keyup",function(){
+            var keyword = this.value;
+            keyword = keyword.toUpperCase();
+            var table_3 = document.getElementById("tableDette");
+            var all_tr = table_3.getElementsByTagName("tr");
+            for(var i=0; i<all_tr.length; i++){
+                var all_columns = all_tr[i].getElementsByTagName("td");
+                for(j=0;j<all_columns.length; j++){
+                    if(all_columns[j]){
+                        var column_value = all_columns[j].textContent || all_columns[j].innerText;
+                        column_value = column_value.toUpperCase();
+                        if(column_value.indexOf(keyword) > -1){
+                            all_tr[i].style.display = ""; // show
+                            break;
+                        }else{
+                            all_tr[i].style.display = "none"; // hide
+                        }
+                    }
+                }
+            }
+        })
+
+        /* -------------------------- default dette --------------------------------------- */
+
+        $.ajax({
+            type: "GET",
+            url: "/GetAllDette",
+            success: function (result) {
+                if (result.status === "success") {
+                    var tableFacAvoir = document.getElementById("tableDette");
+                    var tbodyFacA = tableFacAvoir.querySelector("tbody");
+                    tableFacAvoir.removeChild(tbodyFacA);
+                    var nouveauTbodyA = document.createElement("tbody");
+                    tableFacAvoir.appendChild(nouveauTbodyA);
+                    $.each(result.data, function (i, credit) {
+
+                        /*------------ convert date to normale ---------------- */
+                        let date0000 = credit.detteDate.toString();
+                        let da = date0000.substring(0, date0000.indexOf('.'));
+                        let date3 = new Date(da + "-03:00")
+                        let date4 = date3.toISOString();
+                        let date5 = date4.substring(0, date4.indexOf("."));
+                        let date6 = date5.replace("T", " ")
+                        /*--------- fin convert date to normale ---------------- */
+
+                        var nouvelleLigneA = nouveauTbodyA.insertRow(-1);
+
+                        var nouvelleCelluleA = nouvelleLigneA.insertCell(0);
+                        var nouveauTexteA = document.createTextNode(credit.detteDesignation+""+credit.idDette);
+                        nouvelleCelluleA.appendChild(nouveauTexteA);
+
+                        var nouvelleCelluleA1 = nouvelleLigneA.insertCell(1);
+                        var nouveauTexteA1 = document.createTextNode(credit.montantDette);
+                        nouvelleCelluleA1.appendChild(nouveauTexteA1);
+
+                        var nouvelleCelluleA2 = nouvelleLigneA.insertCell(2);
+                        var nouveauTexteA2 = document.createTextNode(credit.detteFournisseur);
+                        nouvelleCelluleA2.appendChild(nouveauTexteA2);
+
+                        var nouvelleCelluleA3 = nouvelleLigneA.insertCell(3);
+                        var nouveauTexteA3 = document.createTextNode(date6);
+                        nouvelleCelluleA3.appendChild(nouveauTexteA3);
+
+                        var nouvelleCelluleA4 = nouvelleLigneA.insertCell(4);
+                        var nouveauTexteA4 = document.createTextNode(credit.descriptionDette);
+                        nouvelleCelluleA4.appendChild(nouveauTexteA4);
+
+                        var nouvelleCelluleA7 = nouvelleLigneA.insertCell(5);
+                        nouvelleCelluleA7.classList.add('ps-2');
+                        nouvelleCelluleA7.id = "checkBoxT";
+                        nouvelleCelluleA7.style.display="none";
+                        nouvelleCelluleA7.style.minWidth="14px";
+                        nouvelleCelluleA7.style.maxWidth="14px";
+                        var inputCredit = document.createElement("input");
+                        inputCredit.id="checkBoxT";
+                        inputCredit.type="radio";
+                        inputCredit.name="check";
+                        inputCredit.value="1";
+                        inputCredit.style.float="right";
+                        inputCredit.style.marginRight="10px";
+                        nouvelleCelluleA7.appendChild(inputCredit);
+
+                    });
+                }
+            },
+            error: function (e){
+                alert("Erreur liste credit : "+e);
+            }
+        });
+
+        /* ------------------------ fin default dette ------------------------------------- */
+
+    var btnReglerDette = document.getElementById("btnReglerDette");
+    btnReglerDette.addEventListener('click',creerAvoirFacture);
+    function creerAvoirFacture(){
+        if (btnReglerDette.textContent === "Règler une dette"){
+            var idCheckBox = document.querySelectorAll("#checkBoxT");
+            for (var i=0;i<idCheckBox.length;i++){
+                idCheckBox[i].style.display='';
+            }
+            btnReglerDette.textContent="Annuler";
+            btnReglerDette.classList.remove('btn-primary');
+            btnReglerDette.classList.add('btn-danger');
+        }
+        else {
+            var idCheckBox2 = document.querySelectorAll("#checkBoxT");
+            for (var j=0;j<idCheckBox2.length;j++){
+                idCheckBox2[j].style.display='none';
+            }
+            btnReglerDette.textContent="Règler une dette";
+            btnReglerDette.classList.remove('btn-danger');
+            btnReglerDette.classList.add('btn-primary');
+        }
+    }
+
+    /* *************************** filtrage du tableau ************************************ */
+    var inputSearch = document.getElementById("input-search-stock");
+    inputSearch.addEventListener("keyup",function(){
+        var keyword = this.value;
+        keyword = keyword.toUpperCase();
+        var table_3 = document.getElementById("datatable-buttons");
+        var all_tr = table_3.getElementsByTagName("tr");
+        for(var i=0; i<all_tr.length; i++){
+            var all_columns = all_tr[i].getElementsByTagName("td");
+            for(j=0;j<all_columns.length; j++){
+                if(all_columns[j]){
+                    var column_value = all_columns[j].textContent || all_columns[j].innerText;
+                    column_value = column_value.toUpperCase();
+                    if(column_value.indexOf(keyword) > -1){
+                        all_tr[i].style.display = ""; // show
+                        break;
+                    }else{
+                        all_tr[i].style.display = "none"; // hide
+                    }
+                }
+            }
+        }
+    })
+
+    /* ****************** print pageListe client *************************************** */
+
+    var boutonImprimerUser = document.getElementById("btnPrintUtilisateur");
+    boutonImprimerUser.addEventListener('click',printUserAction);
+    function printUserAction() {
+        printJS({
+            printable: 'datatable-utilisateurImprimer2',
+            type: 'html',
+            targetStyles: ['*']
+        });
+    }
+
+    /* ********************** exporter tableClient vers excel ******************************** */
+
+    var boutonExcelUser = document.getElementById("btnExcelUtilisateur");
+    boutonExcelUser.addEventListener('click',Export);
+    function Export() {
+        $("#datatable-utilisateurImprimer2").table2excel({
+            filename: "Utilisateur_Liste "+new Date().getFullYear()+"-"+new Date().getMonth()+"-"+new Date().getDate()+" "+new Date().getHours()+"h"+new Date().getMinutes()+"min .xls"
+        });
+    }
+</script>
+
+</body>
+</html>
