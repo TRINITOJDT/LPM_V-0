@@ -298,7 +298,7 @@
                         <span class="tooltip">Dettes</span>
                     </li>
                     <li id="autorisationBtn" class="li">
-                        <a data-bs-toggle="modal" data-bs-target="#autorisationModal">
+                        <a id="btnAutorisation">
                             <i class="ri ri-key-fill"></i>
                             <span class="links_name">Autorisation</span>
                         </a>
@@ -334,57 +334,63 @@
 
 
     <!-- Standard modal -->
-    <div id="autorisationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel" aria-hidden="false" style="height: calc(100vh - 80px);width: calc(100% - 240px);padding-top: 0px;margin-top: 80px;margin-left: 240px;background: rgb(24,26,33);border: 1px solid #666;border-radius: 4px;">
-        <div class="modal-dialog" style="margin: 0;max-width: 100%">
-            <form class="modal-content" style="border: none;background: rgb(24,26,33)">
-                <div class="modal-header">
-                    <h6 class="modal-title" >Autorisation des utilisateurs</h6>
-                    <button type="button" class="btn" data-bs-dismiss="modal" aria-hidden="true"><img src="../images/close3.ico" alt="close"> </button>
-                </div>
-                <div class="modal-body">
-                    <section class="section profile">
-                        <div class="container-fluid">
-                            <table class="table" id="tableUtilisateurAutorisation" style="margin-top: 20px">
-                                <thead style="border: 2px solid #666;background: rgba(200,200,200,0.1)">
-                                <tr>
-                                    <th style="color: #aaa">Nom & Prénoms</th>
-                                    <th style="color: #aaa">Rôle</th>
-                                    <th style="color: #aaa">Droit d'accès</th>
-                                    <th style="min-width: 80px;max-width: 80px;width: 80px"></th>
-                                    <th style="color: #aaa">Autorisation</th>
-                                </tr>
-                                </thead>
-                                <tbody id="tbodyTUA">
-                                <tr>
-                                    <td style="padding-top: 30px;color: #aaa">Jean Denis Trinito</td>
-                                    <td style="padding-top: 30px;color: #aaa">Administrateur</td>
-                                    <td style="padding-top: 30px;font-style: italic">Accès à tous</td>
-                                    <td style="min-width: 80px;max-width: 80px;width: 80px;border: 1px solid #666"></td>
-                                    <td style="vertical-align: center">
-                                        <div>
-                                            <button type="button" id="btnLireSeulement" class="btn btn-danger">Lire seulement</button>
+    <div id="modalAutorisation" class="modal modalEnc" tabindex="-1" role="dialog" aria-hidden="true" style="height: calc(100vh - 80px);width: calc(100% - 240px);padding-top: 0px;margin-top: 80px;margin-left: 240px;border: 1px solid #666;border-radius: 4px;">
+        <div class="modal-content modal-contentEnc" style="width: 100%;height: 90vh;margin-left: 0;margin-top: 0px;background: rgb(24,35,50);box-shadow: 0 0 10px rgba(200,200,200,0.9)">
+            <div class="container corpsprixSpecial" style="margin: 0;padding: 0">
+                <form style="border: none;background: transparent;width: 100%;height: 85vh">
+                    <div class="modal-header">
+                        <h6 class="modal-title" style="font-weight: 600;color: #bbb">Autorisation des utilisateurs</h6>
+                        <button type="button" class="btn" id="btnCloseAvoir"></button>
+                    </div>
+                    <div class="modal-body" style="padding: 10px 0">
+                        <section class="section profile">
+                            <div class="container-fluid" style="margin: 0;padding: 5px">
+                                <div class="row" style="margin: 1px" id="utilisateur">
+                                    <div class="col-lg-3 col-xl-3 col-md-4 col-sm-12">
+                                        <div class="row" style="margin: 0 -17px">
+                                            <div class="col-12">
+                                                <div class="card mb-2" style="height: 75vh">
+                                                    <div class="card-body">
+                                                        <table class="table dt-responsive nowrap w-100 table-hover text-dark" id="tableFonction">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>Fonction</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            <tr th:each="fonction:${fonctionList}">
+                                                                <td th:text="${fonction.getNomFonction()}"></td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div> <!-- end card body-->
+                                                </div> <!-- end card -->
+                                            </div><!-- end col-->
                                         </div>
-                                        <div class="mt-1 mb-1">
-                                            <button type="button" id="btnSimpleUtilisateur" class="btn btn-warning">Simple utilisateur</button>
+                                    </div>
+                                    <div class="col-lg-9 col-xl-9 col-md-8 col-sm-12">
+                                        <div class="row" style="margin: 0 -17px">
+                                            <div class="col-12">
+                                                <div class="card" style="height: 75vh">
+                                                    <div class="card-body">
+                                                        <div class="row" style="display: flex;justify-content: left">
+                                                            <button id="btnAccueil" type="button" class="btn">Accueil</button>
+                                                            <button id="btnMenu" type="button" class="btn">Menu</button>
+                                                            <button id="btnCreation" type="button" class="btn">Création</button>
+                                                            <button id="btnModification" type="button" class="btn">Modification</button>
+                                                            <button id="btnImpression" type="button" class="btn">Impression</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <button type="button" id="btnAccesTous" class="btn btn-success">Accès à tous</button>
-                                        </div>
-                                    </td>
-                                    <td style="visibility: hidden">id</td>
-                                    <td style="visibility: hidden">adresse</td>
-                                    <td style="visibility: hidden">contact</td>
-                                    <td style="visibility: hidden">photo</td>
-                                    <td style="visibility: hidden">nomUser</td>
-                                    <td style="visibility: hidden">motPass</td>
-                                    <td style="visibility: hidden">magasin</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-                </div>
-            </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -403,13 +409,21 @@
                                     <div class="d-flex">
                                         <label for="nomSociete" class="form-label" style="height: 80px;width: 90px;background: transparent;border-radius: 5px;font-size: 55px;border: 1px solid #aaa"><i class="bi bi-image-fill" style="width: 100%;height: 100%"></i> </label>
                                         <div class="d-table">
-                                            <a class="btn btn-primary" style="margin: 2px 5px"><i class="bi bi-download"></i></a><br>
+                                            <div class="inputfile-box" style="height: 35px;width: 45px;margin-top: 5px;">
+                                                <input type="file" id="file" name="photoProduit" class="inputfile" onchange='uploadFile(this)'>
+                                                <label for="file" style="background: rgba(24,26,30,0.4);width: 40px;height: 35px;">
+                                                    <span id="file-name" class="file-box" style="visibility: hidden"></span>
+                                                    <span class="btn btn-primary file-button" style="border: none;border-radius: 4px;width: 40px"><i class="bi bi-download" aria-hidden="true" style="font-size: 16px;font-weight: bold;color: #ddd"></i></span>
+                                                </label>
+                                            </div>
                                             <a class="btn btn-danger" style="margin: 2px 5px"><i class="bi bi-trash"></i> </a>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-6 offset-1">
                                     <h6 class="modal-title" id="standard-modalLabel" style="font-weight: 700;color: #ddd">INFORMATION SOCIETE</h6>
+                                    <!--<img alt="" th:src="*{'data:image/jpeg;base64,'+{produit.getPhotoProduit()}}">-->
+                                    <img id="logoInfos" alt="" src="" style="height: 60px;width: 60px">
                                 </div>
                             </div>
                         </div>
@@ -545,7 +559,36 @@
     <script src="../js/main.js"></script>
 
     <script>
+        /*------------------------------ input image logo infos --------------------------------- */
 
+        function uploadFile(target) {
+            document.getElementById("file-name").innerHTML = target.files[0].name;
+
+            $.ajax({
+                type: "GET",
+                url: "/GetImageTeste",
+                success: function (result) {
+                    if (result.status === "success") {
+                        //alert(result.data.produit)
+                        //document.getElementById("logoInfos").src = target.files[0].name;
+                        document.getElementById("logoInfos").src="data:image/jpeg;base64,"+result.data.produit;
+                        //document.getElementById("logoInfos").setAttribute("th:src","*{'data:image/jpeg;base64,"+result.data.produit+"}")
+                    }
+                },
+                error: function (e){
+                    alert("erreur de logo : "+e);
+                }
+            })
+        }
+
+        /* ------------------------------ fin image logo infos --------------------------------- */
+
+        document.getElementById("btnAutorisation").addEventListener('click',function (){
+            document.getElementById("modalAutorisation").style.display="flex";
+        });
+        document.getElementById("btnCloseAvoir").addEventListener('click',function (){
+            document.getElementById("modalAutorisation").style.display="none";
+        });
 /* ============================================= corps_page ======================================================= */
 
         document.getElementById("btnInfosSociete").addEventListener('click',function (){
@@ -1232,11 +1275,11 @@
         })
 
         /* ------------------------------ iframeIdentifier ------------------------------------- */
-        var contentIdentifier = document.getElementById("identifierIFrame").contentWindow.document;
+        /*var contentIdentifier = document.getElementById("identifierIFrame").contentWindow.document;
         var nomUtilRecup = contentIdentifier.getElementById("nomUtilisateurRecuperable");
         //$("#labelNomUserRecup").innerText = nomUtilRecup.value;
         var labelNomUserRecup = document.getElementById("labelNomUserRecup");
-        labelNomUserRecup.innerText = "ghgh";
+        labelNomUserRecup.innerText = "ghgh";*/
 
     </script>
 

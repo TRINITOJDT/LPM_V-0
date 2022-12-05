@@ -319,6 +319,53 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div id="tableParentModal2">
+                            <!--<table id="tableProduitArtPrint">
+                                <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Désignation</th>
+                                    <th>Niveau</th>
+                                    <th>Unité</th>
+                                    <th>Quantité</th>
+                                    <th>Poids</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="prod:${produitList0}">
+                                    <td th:text="${prod.getCodeProduit()}"></td>
+                                    <td th:text="${prod.getNomProduit()}"></td>
+                                    <td th:text="${prod.getNiveauProduit()}"></td>
+                                    <td th:text="${prod.getUniteProduit()}"></td>
+                                    <td th:text="${prod.getQuantiteProduit()}"></td>
+                                    <td th:text="${prod.getPoidsProduit()}"></td>
+                                </tr>
+                                </tbody>
+                            </table>-->
+                            <h4 align="center" style="alignment: center;height: 40px;width: 100%;font-weight: 700;font-size: 16px;color: #223">LISTE DES PRODUITS ENREGISTRES</h4>
+                            <table class="table" id="tableProduitArtPrint2">
+                                <thead  style="background-color: #aaa;border: 1px solid #333">
+                                <tr>
+                                    <th style="color: #333">Code</th>
+                                    <th style="color: #333">Désignation</th>
+                                    <th style="color: #333">Niveau</th>
+                                    <th style="color: #333">Unité</th>
+                                    <th style="color: #333">Quantité</th>
+                                    <th style="color: #333">Poids</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="prod:${produitList0}">
+                                    <td th:text="${prod.getCodeProduit()}" style="border: 1px solid #333;border-right-color: transparent;color: #333"></td>
+                                    <td th:text="${prod.getNomProduit()}" style="color: #333"></td>
+                                    <td th:text="${prod.getNiveauProduit()}" style="color: #333"></td>
+                                    <td th:text="${prod.getUniteProduit()}" style="color: #333"></td>
+                                    <td th:text="${prod.getQuantiteProduit()}" style="color: #333"></td>
+                                    <td th:text="${prod.getPoidsProduit()}" style="border: 1px solid #333;border-left-color: transparent;color: #333"></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

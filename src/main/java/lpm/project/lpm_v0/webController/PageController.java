@@ -44,6 +44,8 @@ public class PageController {
             url = "redirect:Identifier";
         }
         else {
+            List<Fonction> fonctionList = fonctionRepository.findAll();
+            model.addAttribute("fonctionList",fonctionList);
             url = "principale";
         }
         return url;

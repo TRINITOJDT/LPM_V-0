@@ -49,7 +49,7 @@
       <div class="boutons_modals">
         <ul class="ul-nav">
           <li class="ul-li-nav">
-            <a class="btn btn-primary" href="#" data-bs-toggle="modal" data-bs-target="#nouveau-client">Nouveau Client</a>
+            <a class="btn btn-primary" id="btnNouveauClient">Nouveau Client</a>
           </li>
         </ul>
         <ul class="ul-nav">
@@ -235,7 +235,7 @@
     <div id="nouveau-client" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="standard-modalLabel"
          aria-hidden="true">
       <div class="modal-dialog">
-        <form class="modal-content" method="post" th:action="@{/SaveClient}">
+        <!--<form class="modal-content" method="post" th:action="@{/SaveClient}">
           <div class="modal-header">
             <h4 class="modal-title" >Nouveau Client</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
@@ -291,9 +291,73 @@
             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Annuler</button>
             <button id="btn-enregistrer-utilisateur" type="submit" class="btn btn-primary">Enregistrer</button>
           </div>
-        </form><!-- /.modal-content -->
+        </form>--><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div>
+
+      <div id="modalNouveauClient" class="modal modalEnc" tabindex="-1" role="dialog" aria-hidden="true" style="justify-content: center">
+          <div class="modal-content modal-contentEnc" style="width: 400px;height: 530px;margin-left: 0;margin-top: -50px;background: rgb(24,35,50);box-shadow: 0 0 10px rgba(200,200,200,0.9)">
+              <div class="container corpsprixSpecial" style="margin: 0">
+                  <form class="modal-content" method="post" th:action="@{/SaveClient}" style="background: transparent;border: none">
+                      <div class="modal-header">
+                          <h4 class="modal-title" >Nouveau Client</h4>
+                          <button type="button" class="btn" id="btnCloseModalAvoir"></button>
+                      </div>
+                      <div class="modal-body">
+                          <div class="mb-1">
+                              <label for="input-cin" class="form-label">Numero CIN</label>
+                              <input name="cinClient" th:value="${client.cinClient}" type="text" id="input-cin" class="form-control">
+                          </div>
+                          <div class="mb-1">
+                              <div class="row">
+                                  <div class="col-12">
+                                      <label for="input-nom" class="form-label">Nom du Client</label>
+                                      <input name="nomPrenom" th:value="${client.nomPrenom}" type="text" id="input-nom" class="form-control">
+                                  </div>
+                              </div>
+                              <input type="hidden">
+                          </div>
+                          <div class="mb-1">
+                              <div class="row">
+                                  <div class="col-6">
+                                      <label for="input-adresse" class="form-label">Adresse</label>
+                                      <input name="adresseClient" th:value="${client.adresseClient}" type="text" id="input-adresse" class="form-control">
+                                  </div>
+                                  <div class="col-6">
+                                      <label for="input-contact" class="form-label">Contact</label>
+                                      <input name="telClient" th:value="${client.telClient}" type="text" id="input-contact" class="form-control">
+                                  </div>
+                              </div>
+
+                          </div>
+                          <div class="mb-1">
+                              <div class="row">
+                                  <div class="col-6">
+                                      <label for="input-nif" class="form-label">NIF</label>
+                                      <input name="nifClient" th:value="${client.nifClient}" id="input-nif" class="form-control">
+                                  </div>
+                                  <div class="col-6">
+                                      <label for="input-stat" class="form-label">STAT</label>
+                                      <input name="statistique" th:value="${client.statistique}" id="input-stat" class="form-control">
+                                  </div>
+                              </div>
+
+                          </div>
+
+                          <div class="mb-1">
+                              <label for="input-cif" class="form-label">CIF</label>
+                              <input name="cifClient" th:value="${client.cifClient}" id="input-cif" class="form-control">
+                          </div>
+
+                      </div>
+                      <div class="modal-footer" style="display: flex;justify-content: center">
+                          <button type="button" class="btn btn-danger" id="btnAnnulerModalClient">Annuler</button>
+                          <button id="btn-enregistrer-utilisateur" type="submit" class="btn btn-primary">Enregistrer</button>
+                      </div>
+                  </form><!-- /.modal-content -->
+              </div>
+          </div>
+      </div>
     <!-- /.modal -->
 
     <!-- Standard modal -->
@@ -303,7 +367,7 @@
           <form class="modal-content" style="background: none;border: none">
             <div class="modal-header" style="height: 50px">
               <h6 class="modal-title" id="standard-modalLabel" style="font-weight: 700;font-size: 14px;color: #aaa">REGLEMENT DU CREDIT</h6>
-              <button type="button" id="btnCloseModalCredit" class="btn-close"></button>
+              <button type="button" id="btnCloseAvoir" class="btn-close"></button>
             </div>
             <div class="modal-body">
               <div class="mb-0">
@@ -383,6 +447,15 @@
 <script>
 
 
+    document.getElementById("btnNouveauClient").addEventListener('click',function (){
+        document.getElementById("modalNouveauClient").style.display="flex";
+    })
+    document.getElementById("btnCloseModalAvoir").addEventListener('click',function (){
+        document.getElementById("modalNouveauClient").style.display="none";
+    })
+    document.getElementById("btnAnnulerModalClient").addEventListener('click',function (){
+        document.getElementById("modalNouveauClient").style.display="none";
+    })
 
 
   /* *************************** filtrage du tableau ************************************ */
@@ -450,62 +523,65 @@
 
             var nouvelleLigneA = nouveauTbodyA.insertRow(-1);
 
-            var nouvelleCelluleA = nouvelleLigneA.insertCell(0);
-            nouvelleCelluleA.style.paddingLeft = "10px";
-            var nouveauTexteA = document.createTextNode(credit.creditDesignation+""+credit.idCredit);
-            nouvelleCelluleA.appendChild(nouveauTexteA);
+            if (credit.montantCredit > credit.montantPayeCredit) {
 
-            var nouvelleCelluleA = nouvelleLigneA.insertCell(1);
-            nouvelleCelluleA.style.paddingLeft = "10px";
-            var nouveauTexteA = document.createTextNode(credit.facVenteCredit);
-            nouvelleCelluleA.appendChild(nouveauTexteA);
+              var nouvelleCelluleA = nouvelleLigneA.insertCell(0);
+              nouvelleCelluleA.style.paddingLeft = "10px";
+              var nouveauTexteA = document.createTextNode(credit.creditDesignation + "" + credit.idCredit);
+              nouvelleCelluleA.appendChild(nouveauTexteA);
 
-            var nouvelleCelluleA1 = nouvelleLigneA.insertCell(2);
-            nouvelleCelluleA1.style.paddingLeft = "10px";
-            var nouveauTexteA1 = document.createTextNode(date6);
-            nouvelleCelluleA1.appendChild(nouveauTexteA1);
+              var nouvelleCelluleA = nouvelleLigneA.insertCell(1);
+              nouvelleCelluleA.style.paddingLeft = "10px";
+              var nouveauTexteA = document.createTextNode(credit.facVenteCredit);
+              nouvelleCelluleA.appendChild(nouveauTexteA);
 
-            var nouvelleCelluleA2 = nouvelleLigneA.insertCell(3);
-            nouvelleCelluleA2.style.paddingLeft = "10px";
-            var nouveauTexteA2 = document.createTextNode(credit.montantCredit);
-            nouvelleCelluleA2.appendChild(nouveauTexteA2);
+              var nouvelleCelluleA1 = nouvelleLigneA.insertCell(2);
+              nouvelleCelluleA1.style.paddingLeft = "10px";
+              var nouveauTexteA1 = document.createTextNode(date6);
+              nouvelleCelluleA1.appendChild(nouveauTexteA1);
 
-            var nouvelleCelluleA3 = nouvelleLigneA.insertCell(4);
-            nouvelleCelluleA3.style.paddingLeft = "10px";
-            var nouveauTexteA3 = document.createTextNode(credit.montantPayeCredit);
-            nouvelleCelluleA3.appendChild(nouveauTexteA3);
+              var nouvelleCelluleA2 = nouvelleLigneA.insertCell(3);
+              nouvelleCelluleA2.style.paddingLeft = "10px";
+              var nouveauTexteA2 = document.createTextNode(credit.montantCredit);
+              nouvelleCelluleA2.appendChild(nouveauTexteA2);
 
-            var nouvelleCelluleA4 = nouvelleLigneA.insertCell(5);
-            nouvelleCelluleA4.style.paddingLeft = "10px";
-            var nouveauTexteA4 = document.createTextNode((credit.montantCredit) - (credit.montantPayeCredit));
-            nouvelleCelluleA4.appendChild(nouveauTexteA4);
+              var nouvelleCelluleA3 = nouvelleLigneA.insertCell(4);
+              nouvelleCelluleA3.style.paddingLeft = "10px";
+              var nouveauTexteA3 = document.createTextNode(credit.montantPayeCredit);
+              nouvelleCelluleA3.appendChild(nouveauTexteA3);
 
-            var nouvelleCelluleA5 = nouvelleLigneA.insertCell(6);
-            nouvelleCelluleA5.style.paddingLeft = "10px";
-            var nouveauTexteA5 = document.createTextNode("indéfini...");
-            nouvelleCelluleA5.appendChild(nouveauTexteA5);
+              var nouvelleCelluleA4 = nouvelleLigneA.insertCell(5);
+              nouvelleCelluleA4.style.paddingLeft = "10px";
+              var nouveauTexteA4 = document.createTextNode((credit.montantCredit) - (credit.montantPayeCredit));
+              nouvelleCelluleA4.appendChild(nouveauTexteA4);
 
-            var nouvelleCelluleA6 = nouvelleLigneA.insertCell(7);
-            nouvelleCelluleA6.classList.add('ps-2');
-            nouvelleCelluleA6.id = "checkBoxT";
-            nouvelleCelluleA6.style.display="none";
-            nouvelleCelluleA6.style.minWidth="14px";
-            nouvelleCelluleA6.style.maxWidth="14px";
-            var inputCredit = document.createElement("input");
-            inputCredit.id="checkBoxT";
-            inputCredit.type="radio";
-            inputCredit.name="check";
-            inputCredit.value="1";
-            inputCredit.style.float="right";
-            inputCredit.style.marginRight="10px";
-            nouvelleCelluleA6.appendChild(inputCredit);
+              var nouvelleCelluleA5 = nouvelleLigneA.insertCell(6);
+              nouvelleCelluleA5.style.paddingLeft = "10px";
+              var nouveauTexteA5 = document.createTextNode("indéfini...");
+              nouvelleCelluleA5.appendChild(nouveauTexteA5);
 
-            var nouvelleCelluleA7 = nouvelleLigneA.insertCell(8);
-            nouvelleCelluleA7.style.paddingLeft = "10px";
-            nouvelleCelluleA7.style.display = "none";
-            var nouveauTexteA7 = document.createTextNode(credit.idCredit);
-            nouvelleCelluleA7.appendChild(nouveauTexteA7);
-            console.log("id0 : "+nouvelleCelluleA7.textContent)
+              var nouvelleCelluleA6 = nouvelleLigneA.insertCell(7);
+              nouvelleCelluleA6.classList.add('ps-2');
+              nouvelleCelluleA6.id = "checkBoxT";
+              nouvelleCelluleA6.style.display = "none";
+              nouvelleCelluleA6.style.minWidth = "14px";
+              nouvelleCelluleA6.style.maxWidth = "14px";
+              var inputCredit = document.createElement("input");
+              inputCredit.id = "checkBoxT";
+              inputCredit.type = "radio";
+              inputCredit.name = "check";
+              inputCredit.value = "1";
+              inputCredit.style.float = "right";
+              inputCredit.style.marginRight = "10px";
+              nouvelleCelluleA6.appendChild(inputCredit);
+
+              var nouvelleCelluleA7 = nouvelleLigneA.insertCell(8);
+              nouvelleCelluleA7.style.paddingLeft = "10px";
+              nouvelleCelluleA7.style.display = "none";
+              var nouveauTexteA7 = document.createTextNode(credit.idCredit);
+              nouvelleCelluleA7.appendChild(nouveauTexteA7);
+              console.log("id0 : " + nouvelleCelluleA7.textContent)
+            }
 
             totalCredit += (credit.montantCredit) - (credit.montantPayeCredit);
             console.log("totalCredit : "+totalCredit);
@@ -677,7 +753,7 @@
     rowBtnPayerCredit.style.display="none";
   });
 
-  document.getElementById("btnCloseModalCredit").addEventListener('click',function (){
+  document.getElementById("btnCloseAvoir").addEventListener('click',function (){
       document.getElementById("modalPayeCreditClient").style.display = "none";
   })
   document.getElementById("btnAnnulerCreditModal").addEventListener('click',function (){
@@ -705,13 +781,13 @@
 
         //let nomClientFac = document.getElementById("facClient").innerText;
         var rowCol = inputs[i].parentNode.parentNode;
-        let fa = rowCol.querySelector('td:nth-child(1)')
-        let da = rowCol.querySelector('td:nth-child(2)')
-        let cr = rowCol.querySelector('td:nth-child(3)')
-        let ute = rowCol.querySelector('td:nth-child(4)')
-        let rs = rowCol.querySelector('td:nth-child(5)')
-        let dateC = rowCol.querySelector('td:nth-child(6)')
-        let idCred = rowCol.querySelector('td:nth-child(8)')
+        let fa = rowCol.querySelector('td:nth-child(2)')
+        let da = rowCol.querySelector('td:nth-child(3)')
+        let cr = rowCol.querySelector('td:nth-child(4)')
+        let ute = rowCol.querySelector('td:nth-child(5)')
+        let rs = rowCol.querySelector('td:nth-child(6)')
+        let dateC = rowCol.querySelector('td:nth-child(7)')
+        let idCred = rowCol.querySelector('td:nth-child(9)')
 
         labFac.innerText = "Crédit le : "+da.textContent;
         labClient.innerText = "Client : "+document.getElementById("nomClientDetail").textContent
@@ -723,9 +799,6 @@
         console.log("id6 : "+dateC.textContent)
         console.log("id 7: "+idCred.textContent)
 
-        inputPAYER.addEventListener('keyup',function (){
-          inputPu.value = ((inputUte.value) - (inputPAYER.value)) ;
-        });
 
       }
     }

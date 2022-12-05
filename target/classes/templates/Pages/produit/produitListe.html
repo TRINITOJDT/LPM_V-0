@@ -37,9 +37,9 @@
             </li>
         </ul>
         <ul class="ul-nav">
-            <li class="ul-li-nav">
+            <!--<li class="ul-li-nav">
                 <a class="btn btn-success" id="btnRefressProduit" style="width: 40px;padding: 5px 0"><img src="../images/synchronize_32px.png" style="height: 22px"></a>
-            </li>
+            </li>-->
             <li class="ul-li-nav">
                 <a class="btn btn-primary" id="btnExcelProduitArtFrame"><img src="../images/excel1_24px.png" style="height: 20px;width: 16px"></a>
             </li>
@@ -113,10 +113,10 @@
 
     }
 
-    document.getElementById("btnRefressProduit").addEventListener('click',function (){
+    /*document.getElementById("btnRefressProduit").addEventListener('click',function (){
        var content = document.getElementById("produitFrame").contentWindow.document;
        alert(content.getElementById("labelDesignation").innerText)
-    });
+    });*/
 
     var content = document.getElementById("produitFrame").contentWindow.document;
 
@@ -127,13 +127,24 @@
     function printDetailVentAction() {
         var content1 = document.getElementById("produitFrame").contentWindow.document;
         var tableProduitArtFrame = content1.getElementById("tableParentModal");
-        var divDoc = document.getElementById("printTableArt");
+        //var divDoc = document.getElementById("printTableArt");
         $("#printTableArt").html(tableProduitArtFrame.innerHTML);
-        console.log(divDoc.innerHTML);
+        //console.log(divDoc.innerHTML);
         printJS({
             printable: 'printTableArt',
             type: 'html',
             targetStyles: ['*']
+        });
+    }
+    document.getElementById("btnExcelProduitArtFrame").addEventListener('click',excelDetailVentAction)
+    function excelDetailVentAction() {
+        var content1 = document.getElementById("produitFrame").contentWindow.document;
+        var tableProduitArtFrame = content1.getElementById("tableParentModal2");
+        var divDoc = document.getElementById("printTableArt");
+        $("#printTableArt").html(tableProduitArtFrame.innerHTML);
+        //console.log(divDoc.innerHTML);
+        $("#printTableArt").table2excel({
+            filename: "Produit_Liste "+new Date().getFullYear()+"-"+new Date().getMonth()+"-"+new Date().getDate()+" "+new Date().getHours()+"h"+new Date().getMinutes()+"min .xls"
         });
     }
 

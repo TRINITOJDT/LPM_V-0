@@ -399,10 +399,24 @@
 <script src="../js/main.js"></script><!-- end demo js-->
 <script>
 
-    document.getElementById("input-date-debut").value = ((new Date().getDate()) -1 )+"/"+new Date().getMonth()+"/"+new Date().getFullYear();
-    document.getElementById("input-date-fin").value = new Date().getDate()+"/"+new Date().getMonth()+"/"+new Date().getFullYear();
-    document.getElementById("input-date-debut2").value = ((new Date().getDate()) -1 )+"/"+new Date().getMonth()+"/"+new Date().getFullYear();
-    document.getElementById("input-date-fin2").value = new Date().getDate()+"/"+new Date().getMonth()+"/"+new Date().getFullYear();
+    var d = new Date();
+    var year = d.getFullYear();
+    var month = d.getMonth() + 1;
+
+    if (month<10){
+        month = '0'+month;
+    }
+    var date0 = d.getDate();
+    if (date0<10){
+        date0 = '0'+date0;
+    }
+
+    var c_date = year+'-'+month+'-'+date0;
+    document.getElementById("input-date-debut").value = c_date;
+    document.getElementById("input-date-fin").value = c_date;
+    document.getElementById("input-date-debut2").value = c_date;
+    document.getElementById("input-date-fin2").value = c_date;
+    /*-------------------------------- fin date ------------------------------------- */
 
     var cardAchat = document.querySelector(".cardAchat");
     var produitDetailsAffichage = document.querySelector(".produitDetailsAffichage");

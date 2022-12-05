@@ -103,19 +103,25 @@
     <div id="tableCleintImprimer" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-contentClient">
-                <div class="modal-body"  id="datatable-utilisateurImprimer2">
+                <div class="modal-body"  id="tableCrediImprimer2">
                     <h4 align="center" style="alignment: center;height: 40px;width: 100%;font-weight: 700;font-size: 16px;color: #223">LISTE DES CREDIT CLIENTS</h4>
-                    <table class="table dt-responsive nowrap w-100 table-hover text-dark">
+                    <table class="table dt-responsive nowrap w-100 table-hover text-dark" id="tableCrediImprimer">
                         <thead style="background-color: #aaa">
                         <tr>
-                            <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Référence</th>
+                            <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Réf Facture</th>
+                            <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Réf Vente</th>
                             <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Montant</th>
-                            <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Client</th>
-                            <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Date</th>
+                            <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Numéro</th>
+                            <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Nom Client</th>
+                            <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Date Vente</th>
+                            <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Status</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
+                            <td style="border: 0.2px solid transparent;border-bottom-color: #eee;border-bottom-width: 2px;"></td>
+                            <td style="border: 0.2px solid transparent;border-bottom-color: #eee;border-bottom-width: 2px;"></td>
+                            <td style="border: 0.2px solid transparent;border-bottom-color: #eee;border-bottom-width: 2px;"></td>
                             <td style="border: 0.2px solid transparent;border-bottom-color: #eee;border-bottom-width: 2px;"></td>
                             <td style="border: 0.2px solid transparent;border-bottom-color: #eee;border-bottom-width: 2px;"></td>
                             <td style="border: 0.2px solid transparent;border-bottom-color: #eee;border-bottom-width: 2px;"></td>
@@ -195,7 +201,7 @@
                     </div>
                     <div class="modal-footer" style="justify-content: center">
                         <button id="btnAnnulerAvoirModal" type="button" class="btn btn-danger" >Annuler</button>
-                        <button id="btnAccorderAvoirModal" type="button" class="btn btn-primary btn-enregistrer">Accorder</button>
+                        <button id="btnAccorderPayeCredit" type="button" class="btn btn-primary btn-enregistrer">Accorder</button>
                     </div>
                 </form>
             </div>
@@ -214,84 +220,138 @@
     <script src="../js/main.js"></script>
 
     <script>
-        $.ajax({
-            type: "GET",
-            url: "/GetAllVenteCredit",
-            success: function (result) {
-                if (result.status === "success") {
-                    var tableFacAvoir = document.getElementById("tableCredit");
-                    var tbodyFacA = tableFacAvoir.querySelector("tbody");
-                    tableFacAvoir.removeChild(tbodyFacA);
-                    var nouveauTbodyA = document.createElement("tbody");
-                    tableFacAvoir.appendChild(nouveauTbodyA);
-                    $.each(result.data, function (i, credit) {
 
-                        /*------------ convert date to normale ---------------- */
-                        let date0000 = credit.dateCredit.toString();
-                        let da = date0000.substring(0, date0000.indexOf('.'));
-                        let date3 = new Date(da + "-03:00")
-                        let date4 = date3.toISOString();
-                        let date5 = date4.substring(0, date4.indexOf("."));
-                        let date6 = date5.replace("T", " ")
-                        /*--------- fin convert date to normale ---------------- */
+        getAllCredit();
+         function getAllCredit(){
+             $.ajax({
+                 type: "GET",
+                 url: "/GetAllVenteCredit",
+                 success: function (result) {
+                     if (result.status === "success") {
+                         var tableFacAvoir = document.getElementById("tableCredit");
+                         var tbodyFacA = tableFacAvoir.querySelector("tbody");
+                         tableFacAvoir.removeChild(tbodyFacA);
+                         var nouveauTbodyA = document.createElement("tbody");
+                         tableFacAvoir.appendChild(nouveauTbodyA);
 
-                        var nouvelleLigneA = nouveauTbodyA.insertRow(-1);
 
-                        var nouvelleCelluleA = nouvelleLigneA.insertCell(0);
-                        var nouveauTexteA = document.createTextNode(credit.facVenteCredit);
-                        nouvelleCelluleA.appendChild(nouveauTexteA);
+                         var tableCreditImp = document.getElementById("tableCrediImprimer");
+                         var tbodyCreditImp = tableCreditImp.querySelector("tbody");
+                         tableCreditImp.removeChild(tbodyCreditImp);
+                         var nouveauTbodyCreditImp = document.createElement("tbody");
+                         tableCreditImp.appendChild(nouveauTbodyCreditImp);
+                         $.each(result.data, function (i, credit) {
 
-                        var nouvelleCelluleA1 = nouvelleLigneA.insertCell(1);
-                        var nouveauTexteA1 = document.createTextNode(credit.refVenteCredit);
-                        nouvelleCelluleA1.appendChild(nouveauTexteA1);
+                             /*------------ convert date to normale ---------------- */
+                             let date0000 = credit.dateCredit.toString();
+                             let da = date0000.substring(0, date0000.indexOf('.'));
+                             let date3 = new Date(da + "-03:00")
+                             let date4 = date3.toISOString();
+                             let date5 = date4.substring(0, date4.indexOf("."));
+                             let date6 = date5.replace("T", " ")
+                             /*--------- fin convert date to normale ---------------- */
 
-                        var nouvelleCelluleA2 = nouvelleLigneA.insertCell(2);
-                        var nouveauTexteA2 = document.createTextNode(credit.montantCredit);
-                        nouvelleCelluleA2.appendChild(nouveauTexteA2);
+                             var nouvelleLigneA = nouveauTbodyA.insertRow(-1);
 
-                        var nouvelleCelluleA3 = nouvelleLigneA.insertCell(3);
-                        var nouveauTexteA3 = document.createTextNode(credit.creditDesignation+""+credit.idCredit);
-                        nouvelleCelluleA3.appendChild(nouveauTexteA3);
+                             var nouvelleCelluleA = nouvelleLigneA.insertCell(0);
+                             var nouveauTexteA = document.createTextNode(credit.facVenteCredit);
+                             nouvelleCelluleA.appendChild(nouveauTexteA);
 
-                        var nouvelleCelluleA4 = nouvelleLigneA.insertCell(4);
-                        var nouveauTexteA4 = document.createTextNode(credit.clientCredit);
-                        nouvelleCelluleA4.appendChild(nouveauTexteA4);
+                             var nouvelleCelluleA1 = nouvelleLigneA.insertCell(1);
+                             var nouveauTexteA1 = document.createTextNode(credit.refVenteCredit);
+                             nouvelleCelluleA1.appendChild(nouveauTexteA1);
 
-                        var nouvelleCelluleA5 = nouvelleLigneA.insertCell(5);
-                        var nouveauTexteA5 = document.createTextNode(date6);
-                        nouvelleCelluleA5.appendChild(nouveauTexteA5);
+                             var nouvelleCelluleA2 = nouvelleLigneA.insertCell(2);
+                             var nouveauTexteA2 = document.createTextNode(credit.montantCredit);
+                             nouvelleCelluleA2.appendChild(nouveauTexteA2);
 
-                        var nouvelleCelluleA6 = nouvelleLigneA.insertCell(6);
-                        var nouveauTexteA6 = document.createTextNode("impayé");
-                        nouvelleCelluleA6.appendChild(nouveauTexteA6);
+                             var nouvelleCelluleA3 = nouvelleLigneA.insertCell(3);
+                             var nouveauTexteA3 = document.createTextNode(credit.creditDesignation+""+credit.idCredit);
+                             nouvelleCelluleA3.appendChild(nouveauTexteA3);
 
-                        var nouvelleCelluleA7 = nouvelleLigneA.insertCell(7);
-                        nouvelleCelluleA7.classList.add('ps-2');
-                        nouvelleCelluleA7.id = "checkBoxT";
-                        nouvelleCelluleA7.style.display="none";
-                        nouvelleCelluleA7.style.minWidth="14px";
-                        nouvelleCelluleA7.style.maxWidth="14px";
-                        var inputCredit = document.createElement("input");
-                        inputCredit.id="checkBoxT";
-                        inputCredit.type="radio";
-                        inputCredit.name="check";
-                        inputCredit.value="1";
-                        inputCredit.style.float="right";
-                        inputCredit.style.marginRight="10px";
-                        nouvelleCelluleA7.appendChild(inputCredit);
+                             var nouvelleCelluleA4 = nouvelleLigneA.insertCell(4);
+                             var nouveauTexteA4 = document.createTextNode(credit.clientCredit);
+                             nouvelleCelluleA4.appendChild(nouveauTexteA4);
 
-                    });
-                }
-            },
-            error: function (e){
-                alert("Erreur liste credit : "+e);
-            }
-        });
+                             var nouvelleCelluleA5 = nouvelleLigneA.insertCell(5);
+                             var nouveauTexteA5 = document.createTextNode(date6);
+                             nouvelleCelluleA5.appendChild(nouveauTexteA5);
+
+
+                             var nouveauTexteA6;
+                             var nouvelleCelluleA6 = nouvelleLigneA.insertCell(6);
+                             if (credit.montantCredit === credit.montantPayeCredit) {
+                                 nouveauTexteA6 = document.createTextNode("payée");
+                                 nouvelleCelluleA6.style.color="green";
+                             }else if (credit.montantCredit > credit.montantPayeCredit){
+                                 nouveauTexteA6 = document.createTextNode("impayée");
+                                 nouvelleCelluleA6.style.color="red";
+                             }
+                             nouvelleCelluleA6.appendChild(nouveauTexteA6);
+
+                             /*var nouvelleCelluleA6 = nouvelleLigneA.insertCell(6);
+                             if (credit.montantCredit === credit.montantPayDette)
+                             var nouveauTexteA6 = document.createTextNode("impayé");
+                             nouvelleCelluleA6.appendChild(nouveauTexteA6);*/
+
+                             var nouvelleCelluleA7 = nouvelleLigneA.insertCell(7);
+                             nouvelleCelluleA7.classList.add('ps-2');
+                             nouvelleCelluleA7.id = "checkBoxT";
+                             nouvelleCelluleA7.style.display="none";
+                             nouvelleCelluleA7.style.minWidth="14px";
+                             nouvelleCelluleA7.style.maxWidth="14px";
+                             var inputCredit = document.createElement("input");
+                             inputCredit.id="checkBoxT";
+                             inputCredit.type="radio";
+                             inputCredit.name="check";
+                             inputCredit.value="1";
+                             inputCredit.style.float="right";
+                             inputCredit.style.marginRight="10px";
+                             nouvelleCelluleA7.appendChild(inputCredit);
+
+
+                             var nouvelleLigneCredit = nouveauTbodyCreditImp.insertRow(-1);
+
+                             var nouvelleCelluleAC = nouvelleLigneCredit.insertCell(0);
+                             var nouveauTexteAC = document.createTextNode(credit.facVenteCredit);
+                             nouvelleCelluleAC.appendChild(nouveauTexteAC);
+
+                             var nouvelleCelluleA1C = nouvelleLigneCredit.insertCell(1);
+                             var nouveauTexteA1C = document.createTextNode(credit.refVenteCredit);
+                             nouvelleCelluleA1C.appendChild(nouveauTexteA1C);
+
+                             var nouvelleCelluleA2C = nouvelleLigneCredit.insertCell(2);
+                             var nouveauTexteA2C = document.createTextNode(credit.montantCredit);
+                             nouvelleCelluleA2C.appendChild(nouveauTexteA2C);
+
+                             var nouvelleCelluleA3C = nouvelleLigneCredit.insertCell(3);
+                             var nouveauTexteA3C = document.createTextNode(credit.creditDesignation+""+credit.idCredit);
+                             nouvelleCelluleA3C.appendChild(nouveauTexteA3C);
+
+                             var nouvelleCelluleA4C = nouvelleLigneCredit.insertCell(4);
+                             var nouveauTexteA4C = document.createTextNode(credit.clientCredit);
+                             nouvelleCelluleA4C.appendChild(nouveauTexteA4C);
+
+                             var nouvelleCelluleA5C = nouvelleLigneCredit.insertCell(5);
+                             var nouveauTexteA5C = document.createTextNode(date6);
+                             nouvelleCelluleA5C.appendChild(nouveauTexteA5C);
+
+                             var nouvelleCelluleA6C = nouvelleLigneCredit.insertCell(6);
+                             var nouveauTexteA6C = document.createTextNode("impayé");
+                             nouvelleCelluleA6C.appendChild(nouveauTexteA6C);
+                         });
+                     }
+                 },
+                 error: function (e){
+                     alert("Erreur liste credit : "+e);
+                 }
+             });
+         }
 
         var radios = document.querySelectorAll('#radio1');
         for (var i=0;i<radios.length;i++){
             radios[i].addEventListener('click',function (){
-                alert(radios[i].value)
+                //alert(radios[i].value)
             })
         }
 
@@ -314,6 +374,7 @@
                     let clientC = rowCol.querySelector('td:nth-child(5)')
                     let dateC = rowCol.querySelector('td:nth-child(6)')
 
+
                     let labFac = document.getElementById("labFac");
                     let labClient = document.getElementById("labClient");
                     let inputDesi = document.getElementById("inputDesi");
@@ -326,12 +387,26 @@
                     inputDesi.innerText = "Référence facture : "+desi.textContent;
                     inputQte.innerText = "Référence vente : "+qte.textContent;
                     inputUte.value = pu.textContent;
-                    inputPu.value = pu.textContent;
 
-                    let inputPAYER = document.getElementById("inputPAYER");
+                    $.ajax({
+                        type: "GET",
+                        url: "/GetResteCredit?numDette=" + ute.textContent,
+                        success: function (result) {
+                            if (result.status === "success") {
+                                inputPu.value = result.data;
+                                console.log("reste : "+result.data);
+                            }
+                        },
+                        error: function (e) {
+                            alert("erreur 0 : " + e);
+                        }
+                    })
+
+
+                    /*let inputPAYER = document.getElementById("inputPAYER");
                     inputPAYER.addEventListener('keyup',function (){
                         inputPu.value = ((inputUte.value) - (inputPAYER.value)) ;
-                    });
+                    });*/
 
                     let btnCloseModal = document.getElementById("btnCloseModalAvoir");
                     btnCloseModal.addEventListener('click',function (){
@@ -344,6 +419,44 @@
                 }
             }
         }
+
+        document.getElementById("btnAccorderPayeCredit").addEventListener('click',function (){
+            var nuDette;
+            var inputs = document.querySelectorAll('#checkBoxT'),
+                inputsLength = inputs.length;
+            for (var i = 0 ; i < inputsLength ; i++) {
+                if (inputs[i].type == 'radio' && inputs[i].checked) {
+
+                    var rowCol = inputs[i].parentNode.parentNode;
+                    nuDette = rowCol.querySelector('td:nth-child(4)')
+                }
+            }
+
+            //alert("id : "+nuDette.textContent+" , inputTotal : "+$("#inputTotalDette").val()+" , livre : "+$("#inputLivre").val())
+
+            var formDataCredit = {
+                idCredit : nuDette.textContent,
+                montantPayeCredit : $("#inputPAYER").val(),
+                typePayeCredit : $("#typePaye").val()
+            }
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url : "/SavePayeCreditC",
+                data : JSON.stringify(formDataCredit),
+                dataType : 'json',
+                success: function (result) {
+                    if (result.status === "success") {
+                        getAllCredit();
+                        document.getElementById("modalAvoir").style.display="none";
+                        document.getElementById("rowBtnSaveAvoir").style.display="none";
+                    }
+                },
+                error: function (e){
+                    alert("erreur d : "+e);
+                }
+            })
+        })
 
         var rowBtnSaveAvoir = document.getElementById("rowBtnSaveAvoir");
         var btnAnnulerCredit = document.getElementById("annulerCredit");
@@ -371,13 +484,14 @@
                     inputs[i].checked = false;
                 }
             }
+            rowBtnSaveAvoir.style.display="none";
         });
     /* *************************** filtrage du tableau ************************************ */
-    var inputSearch = document.getElementById("input-search-stock");
+    var inputSearch = document.getElementById("input-search-credit");
     inputSearch.addEventListener("keyup",function(){
         var keyword = this.value;
         keyword = keyword.toUpperCase();
-        var table_3 = document.getElementById("datatable-buttons");
+        var table_3 = document.getElementById("tableCredit");
         var all_tr = table_3.getElementsByTagName("tr");
         for(var i=0; i<all_tr.length; i++){
             var all_columns = all_tr[i].getElementsByTagName("td");
@@ -398,11 +512,11 @@
 
     /* ****************** print pageListe client *************************************** */
 
-    var boutonImprimerUser = document.getElementById("btnPrintUtilisateur");
+    var boutonImprimerUser = document.getElementById("btnPrintCredit");
     boutonImprimerUser.addEventListener('click',printUserAction);
     function printUserAction() {
         printJS({
-            printable: 'datatable-utilisateurImprimer2',
+            printable: 'tableCrediImprimer2',
             type: 'html',
             targetStyles: ['*']
         });
@@ -410,11 +524,11 @@
 
     /* ********************** exporter tableClient vers excel ******************************** */
 
-    var boutonExcelUser = document.getElementById("btnExcelUtilisateur");
+    var boutonExcelUser = document.getElementById("btnExcelCtedit");
     boutonExcelUser.addEventListener('click',Export);
     function Export() {
-        $("#datatable-utilisateurImprimer2").table2excel({
-            filename: "Utilisateur_Liste "+new Date().getFullYear()+"-"+new Date().getMonth()+"-"+new Date().getDate()+" "+new Date().getHours()+"h"+new Date().getMinutes()+"min .xls"
+        $("#tableCrediImprimer2").table2excel({
+            filename: "Liste_crédit "+new Date().getFullYear()+"-"+new Date().getMonth()+"-"+new Date().getDate()+" "+new Date().getHours()+"h"+new Date().getMinutes()+"min .xls"
         });
     }
 </script>

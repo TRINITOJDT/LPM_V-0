@@ -274,4 +274,79 @@ public class RestControlller {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
+    @GetMapping("/GetResteDette")
+    public ResponseEntity<Object> selecteDetteReste(@RequestParam(name = "numDette",defaultValue = "") String numDette ){
+        List<Dette> detteList = detteRepository.findAll();
+        double reste = 0.0;
+        for (Dette dette:detteList){
+            if (numDette.equals(dette.getDetteDesignation()+""+dette.getIdDette())){
+                reste = dette.getMontantDette() - dette.getMontantPayDette();
+            }
+        }
+        ServiceResponse<Double> response = new ServiceResponse<>("success",reste);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @GetMapping("/GetResteCredit")
+    public ResponseEntity<Object> selecteCreditReste(@RequestParam(name = "numDette",defaultValue = "") String numDette ){
+        List<Credit> creditList = creditRepository.findAll();
+        double reste = 0.0;
+        for (Credit credit:creditList){
+            if (numDette.equals(credit.getCreditDesignation()+""+credit.getIdCredit())){
+                reste = credit.getMontantCredit() - credit.getMontantPayeCredit();
+            }
+        }
+        ServiceResponse<Double> response = new ServiceResponse<>("success",reste);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @PostMapping("/SavePayeDetteP")
+    public ResponseEntity<Object> enregistrerPayeDettePage(@RequestBody ModelMap detteModel){
+        String idDettePayer =  detteModel.getAttribute("idDette").toString();
+        double montantDette =  Double.valueOf(detteModel.getAttribute("montantDette").toString());
+        double payeDettePayer =  Double.valueOf(detteModel.getAttribute("montantPayeDette").toString());
+
+        List<Dette> detteList = detteRepository.findAll();
+        for (Dette dette:detteList){
+            if (idDettePayer.equals(dette.getDetteDesignation()+""+dette.getIdDette())){
+                dette.setMontantPayDette(payeDettePayer);
+                detteRepository.save(dette);
+            }
+        }
+
+        ServiceResponse<String> response = new ServiceResponse<>("success","ok");
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @PostMapping("/SavePayeCreditC")
+    public ResponseEntity<Object> enregistrerPayeCreditC(@RequestBody ModelMap credit){
+        String idCreditPayer =  credit.getAttribute("idCredit").toString();
+        double payePayer =  Double.valueOf(credit.getAttribute("montantPayeCredit").toString());
+        String typePayer =  credit.getAttribute("typePayeCredit").toString();
+
+
+        List<Credit> creditList = creditRepository.findAll();
+        for (Credit credit1:creditList){
+            if (idCreditPayer.equals(credit1.getCreditDesignation()+""+credit1.getIdCredit())){
+                credit1.setMontantPayeCredit(payePayer);
+                creditRepository.save(credit1);
+                payementRepository.save(new Payement(typePayer,payePayer));
+            }
+        }
+
+        ServiceResponse<String> response = new ServiceResponse<>("success","Ok");
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @GetMapping("/GetImageTeste")
+    public ResponseEntity<Object> testeImage(ModelMap modelMap){
+        List<Produit> produitList = produitRepository.findAll();
+        Produit produit = produitList.get(1);
+        System.out.println("produit logo nom : "+produit.getNomProduit());
+        System.out.println("produit logo image : "+produit.getPhotoProduit());
+        modelMap.addAttribute("produit",produit.getPhotoProduit());
+        ServiceResponse<ModelMap> response = new ServiceResponse<>("success",modelMap);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
 }

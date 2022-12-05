@@ -41,6 +41,7 @@ public class VenteController {
     @Autowired private CaisseRepository caisseRepository;
     @Autowired private FacVtempRepository facVtempRepository;
     @Autowired private CreditRepository creditRepository;
+    @Autowired private PayeTempRepository payeTempRepository;
 
     @GetMapping("/Vente")
     public String afficheVente(Model model,
@@ -122,9 +123,9 @@ public class VenteController {
         model.addAttribute("nbrArticle",nbrArticle);
 
         double montantPaye = 0;
-        List<Payement> payementList = payementRepository.findAll();
-        for (Payement payement:payementList){
-            montantPaye += payement.getMontantPayement();
+        List<PayeTemp> payementList = payeTempRepository.findAll();
+        for (PayeTemp payement:payementList){
+            montantPaye += payement.getMontantPayeTemp();
         }
         model.addAttribute("payementList",payementList);
         model.addAttribute("montantPaye",montantPaye);
@@ -335,7 +336,8 @@ public class VenteController {
         List<FacVente> facVentelist = facVenteRepository.findAll(Sort.by("dateFacVente").descending());
         FacVente facVente = facVentelist.get(0);
         payementVenteRepository.save(new PayementVente(new Date(),refVente.getRef_vente()+"-"+refVente.getId_ref_vente(),facVente.getFacVente()+"-"+facVente.getId_FacVente(),nomProduit,montantPaye,typePaye,nomClient));
-        payementRepository.save(new Payement(typePaye,montantPaye,refVente.getRef_vente()+"-"+refVente.getId_ref_vente()));
+        //payementRepository.save(new Payement(typePaye,montantPaye,refVente.getRef_vente()+"-"+refVente.getId_ref_vente()));
+        payeTempRepository.save(new PayeTemp(typePaye,montantPaye,refVente.getRef_vente()+"-"+refVente.getId_ref_vente()));
 
         if (typePaye.equals("crédit")){
             creditRepository.save(new Credit("crédit n° ",nomClient,facVente.getFacVente()+"-"+facVente.getId_FacVente(),refVente.getRef_vente()+"-"+refVente.getId_ref_vente(),new Date(),montantPaye,0.0));
@@ -634,9 +636,14 @@ public class VenteController {
             model.addAttribute("refVente", refVente);
 
 
-            List<Payement> payementList = payementRepository.findAll();
+            /*List<Payement> payementList = payementRepository.findAll();
             for (Payement payement : payementList) {
                 payementRepository.deleteById(payement.getId_Payement());
+            }*/
+            List<PayeTemp> payeTempList = payeTempRepository.findAll();
+            for (PayeTemp payement : payeTempList) {
+                payementRepository.save(new Payement(payement.getTypePayeTemp(),payement.getMontantPayeTemp(),payement.getRefVentePayeTemp()));
+                payeTempRepository.deleteById(payement.getIdPayeTemp());
             }
         }
         System.out.println("Remise Enregistrer Vente = "+remise);

@@ -20,7 +20,7 @@
 <body style="background-color: transparent">
 
 <!-- *********************************************** content *********************************** -->
-<div class="container-fluid" style="height: 100vh;padding-top: 20px">
+<div class="container-fluid" style="height: 100vh;padding-top: 20px" data-simplebar="init">
 
     <div class="row">
         <div class="boutons_modals head" style="margin-left: 10px">
@@ -240,9 +240,9 @@
                                                 <tbody>
                                                 <tr th:each="paye:${payementList}">
                                                     <td>payé</td>
-                                                    <td th:text="${paye.getMontantPayement()}"></td>
+                                                    <td th:text="${paye.getMontantPayeTemp()}"></td>
                                                     <td>par</td>
-                                                    <td th:text="${paye.getTypePayement()}"></td>
+                                                    <td th:text="${paye.getTypePayeTemp()}"></td>
                                                     <td><a class="btn modifier" ><img src="/images/icons8_ball_point_pen2.ico" alt="Profile" class="rounded-circle"> </a></td>
                                                 </tr>
                                                 </tbody>

@@ -837,7 +837,13 @@ public class articleController {
     }
 
     @GetMapping("/Dette")
-    public String tousLesDettes(){
+    public String tousLesDettes(Model model){
+        List<Fournisseur> fournisseurList = fournisseurRepository.findAll();
+        List<ProduitPlusProduit> produitPlusProduitList = produitPlusProduitRepository.findAll();
+        model.addAttribute("fournisseurList",fournisseurList);
+        model.addAttribute("produitPlusProduitList",produitPlusProduitList);
+        model.addAttribute("fournisseur",new Fournisseur());
+        model.addAttribute("plp",new ProduitPlusProduit());
         return "Pages/produit/dette";
     }
 

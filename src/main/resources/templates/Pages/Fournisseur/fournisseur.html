@@ -785,9 +785,6 @@
                     inputResteDette.value = reste.textContent;
 
                     idDettePaye = idDette.textContent;
-                    inputLivrer.addEventListener('keyup',function (){
-                        inputResteDette.value = ((inputTotalDette.value) - (inputLivrer.value)) ;
-                    });
                 }
             }
         }
@@ -850,10 +847,6 @@
 
                             var nouvelleLigne = nouveauTbodyA.insertRow(-1);
 
-                            var nouvelleCellule = nouvelleLigne.insertCell(0);
-                            var nouveauTexte = document.createTextNode(dette.detteDesignation+""+dette.idDette);
-                            nouvelleCellule.appendChild(nouveauTexte);
-
                             /*------------ convert date to normale ---------------- */
                             let date0000 = dette.detteDate.toString();
                             let da = date0000.substring(0, date0000.indexOf('.'));
@@ -863,46 +856,53 @@
                             let date6 = date5.replace("T", " ")
                             /*--------- fin convert date to normale ---------------- */
 
-                            var nouvelleCellule1 = nouvelleLigne.insertCell(1);
-                            var nouveauTexte1 = document.createTextNode(date6);
-                            nouvelleCellule1.appendChild(nouveauTexte1);
+                            if (dette.montantDette > dette.montantPayDette) {
 
-                            var nouvelleCellule2 = nouvelleLigne.insertCell(2);
-                            var nouveauTexte2 = document.createTextNode(dette.montantDette);
-                            nouvelleCellule2.appendChild(nouveauTexte2);
+                                var nouvelleCellule = nouvelleLigne.insertCell(0);
+                                var nouveauTexte = document.createTextNode(dette.detteDesignation + "" + dette.idDette);
+                                nouvelleCellule.appendChild(nouveauTexte);
 
-                            var nouvelleCellule3 = nouvelleLigne.insertCell(3);
-                            var nouveauTexte3 = document.createTextNode(dette.montantPayDette);
-                            nouvelleCellule3.appendChild(nouveauTexte3);
+                                var nouvelleCellule1 = nouvelleLigne.insertCell(1);
+                                var nouveauTexte1 = document.createTextNode(date6);
+                                nouvelleCellule1.appendChild(nouveauTexte1);
 
-                            var nouvelleCellule4 = nouvelleLigne.insertCell(4);
-                            var nouveauTexte4 = document.createTextNode((dette.montantDette) - (dette.montantPayDette));
-                            nouvelleCellule4.appendChild(nouveauTexte4);
+                                var nouvelleCellule2 = nouvelleLigne.insertCell(2);
+                                var nouveauTexte2 = document.createTextNode(dette.montantDette);
+                                nouvelleCellule2.appendChild(nouveauTexte2);
 
-                            var nouvelleCellule5 = nouvelleLigne.insertCell(5);
-                            var nouveauTexte5 = document.createTextNode("Avance de "+dette.produitEndette);
-                            nouvelleCellule5.appendChild(nouveauTexte5);
+                                var nouvelleCellule3 = nouvelleLigne.insertCell(3);
+                                var nouveauTexte3 = document.createTextNode(dette.montantPayDette);
+                                nouvelleCellule3.appendChild(nouveauTexte3);
 
-                            var nouvelleCelluleA6 = nouvelleLigne.insertCell(6);
-                            nouvelleCelluleA6.classList.add('ps-2');
-                            nouvelleCelluleA6.id = "checkBoxT";
-                            nouvelleCelluleA6.style.display="none";
-                            nouvelleCelluleA6.style.minWidth="14px";
-                            nouvelleCelluleA6.style.maxWidth="14px";
-                            var inputCredit = document.createElement("input");
-                            inputCredit.id="checkBoxT";
-                            inputCredit.type="radio";
-                            inputCredit.name="check";
-                            inputCredit.value="1";
-                            inputCredit.style.float="right";
-                            inputCredit.style.marginRight="10px";
-                            nouvelleCelluleA6.appendChild(inputCredit);
+                                var nouvelleCellule4 = nouvelleLigne.insertCell(4);
+                                var nouveauTexte4 = document.createTextNode((dette.montantDette) - (dette.montantPayDette));
+                                nouvelleCellule4.appendChild(nouveauTexte4);
 
-                            var nouvelleCelluleA7 = nouvelleLigne.insertCell(7);
-                            nouvelleCelluleA7.style.paddingLeft = "10px";
-                            nouvelleCelluleA7.style.display = "none";
-                            var nouveauTexteA7 = document.createTextNode(dette.idDette);
-                            nouvelleCelluleA7.appendChild(nouveauTexteA7);
+                                var nouvelleCellule5 = nouvelleLigne.insertCell(5);
+                                var nouveauTexte5 = document.createTextNode("Avance de " + dette.produitEndette);
+                                nouvelleCellule5.appendChild(nouveauTexte5);
+
+                                var nouvelleCelluleA6 = nouvelleLigne.insertCell(6);
+                                nouvelleCelluleA6.classList.add('ps-2');
+                                nouvelleCelluleA6.id = "checkBoxT";
+                                nouvelleCelluleA6.style.display = "none";
+                                nouvelleCelluleA6.style.minWidth = "14px";
+                                nouvelleCelluleA6.style.maxWidth = "14px";
+                                var inputCredit = document.createElement("input");
+                                inputCredit.id = "checkBoxT";
+                                inputCredit.type = "radio";
+                                inputCredit.name = "check";
+                                inputCredit.value = "1";
+                                inputCredit.style.float = "right";
+                                inputCredit.style.marginRight = "10px";
+                                nouvelleCelluleA6.appendChild(inputCredit);
+
+                                var nouvelleCelluleA7 = nouvelleLigne.insertCell(7);
+                                nouvelleCelluleA7.style.paddingLeft = "10px";
+                                nouvelleCelluleA7.style.display = "none";
+                                var nouveauTexteA7 = document.createTextNode(dette.idDette);
+                                nouvelleCelluleA7.appendChild(nouveauTexteA7);
+                            }
 
                             totalDette += ((dette.montantDette) - (dette.montantPayDette));
 

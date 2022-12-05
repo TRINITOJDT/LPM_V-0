@@ -20,7 +20,7 @@
 <body style="background-color: transparent">
 
 <!-- *********************************************** content *********************************** -->
-<div class="container-fluid" style="height: 100vh;padding-top: 20px">
+<div class="container-fluid" style="height: 100vh;padding-top: 20px" data-simplebar="init">
 
     <div class="row">
         <div class="boutons_modals head" style="margin-left: 10px">
@@ -240,9 +240,9 @@
                                                 <tbody>
                                                 <tr th:each="paye:${payementList}">
                                                     <td>payé</td>
-                                                    <td th:text="${paye.getMontantPayement()}"></td>
+                                                    <td th:text="${paye.getMontantPayeTemp()}"></td>
                                                     <td>par</td>
-                                                    <td th:text="${paye.getTypePayement()}"></td>
+                                                    <td th:text="${paye.getTypePayeTemp()}"></td>
                                                     <td><a class="btn modifier" ><img src="/images/icons8_ball_point_pen2.ico" alt="Profile" class="rounded-circle"> </a></td>
                                                 </tr>
                                                 </tbody>
@@ -353,7 +353,7 @@
                                     <td></td>
                                     <td></td>
                                 </tr>
-                                <tr style="background-color: rgba(245,245,245,0.4);border: 1px solid transparent;border-top-color: 0;border-top-width: 1.2px">
+                                <tr style="background-color: rgba(245,245,245,0.4);border: 1px solid transparent;border-top-width: 1.2px">
                                     <td style="padding-left: 30px;padding-top: 0;border: 1px solid transparent">SUBTOTAL</td>
                                     <td style="padding-left: 15px;padding-top: 0;border: 1px solid transparent">REMISE</td>
                                     <td style="padding-left: 10px;padding-top: 0;border: 1px solid transparent;"></td>

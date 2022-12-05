@@ -77,6 +77,7 @@
                                     <th>Fournisseur</th>
                                     <th>Date</th>
                                     <th>Déscription</th>
+                                    <th>Status</th>
                                     <th id="checkBoxT" style="min-width: 14px;width: 14px;max-width: 14px;display: none"></th>
                                 </tr>
                                 </thead>
@@ -87,10 +88,22 @@
                                     <td></td>
                                     <td></td>
                                     <td></td>
-                                    <td class="ps-2"  id="checkBoxT" style="min-width: 14px;14px;max-width: 14px;display: none"><input id="checkBoxT" type="checkbox" style="float: right;margin-right: 10px"></td>
+                                    <td></td>
+                                    <td class="ps-2"  id="checkBoxT" style="min-width: 14px;max-width: 14px;display: none"><input id="checkBoxT" type="checkbox" style="float: right;margin-right: 10px"></td>
                                 </tr>
                                 </tbody>
                             </table>
+                            <hr id="hrBtnSaveDette">
+                            <div class="row" id="rowBtnSaveDette" style="display:none;">
+                                <div class="col-12">
+                                    <div class="container-fluid">
+                                        <div class="d-flex" style="justify-content: center">
+                                            <button type="button" class="btn btn-danger" id="annulerDette" style="min-height: 32px;height: 32px;width: auto;margin-right: 5px">Annuler</button>
+                                            <button type="button" class="btn btn-success" onclick="checkDette();" style="height: 33px;min-height: 32px;height: 32px;width: auto;" id="validerCrdit">Valider</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -101,9 +114,9 @@
         <div id="tableCleintImprimer" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-contentClient">
-                    <div class="modal-body"  id="datatable-utilisateurImprimer2">
+                    <div class="modal-body"  id="tableDetteImprimer2">
                         <h4 align="center" style="alignment: center;height: 40px;width: 100%;font-weight: 700;font-size: 16px;color: #223">LISTE DES DETTES FOURNISSEURS</h4>
-                        <table class="table dt-responsive nowrap w-100 table-hover text-dark">
+                        <table class="table dt-responsive nowrap w-100 table-hover text-dark" id="tableDetteImprimer">
                             <thead style="background-color: #aaa">
                             <tr>
                                 <th style="text-align: left;padding-left: 10px;padding-top: 5px;padding-bottom: 5px;border: 1px solid transparent;border-bottom-color: #aaa;border-top-color: #aaa;color: #333">Référence</th>
@@ -128,8 +141,102 @@
         </div>
 
         <!-- Standard modal -->
-
+        <div id="modalNouvelleAvance" class="modal modalEnc" tabindex="-1" role="dialog" aria-hidden="true" style="justify-content: center">
+            <div class="modal-content modal-contentEnc" style="width: 400px;height: 430px;margin-left: 0;margin-top: -50px;background: rgb(24,35,50);box-shadow: 0 0 10px rgba(200,200,200,0.9)">
+                <div class="container corpsprixSpecial" style="margin: 0">
+                    <form class="modal-content" method="post" style="background: transparent;border: none">
+                        <div class="modal-header">
+                            <h6 class="modal-title" >Nouvelle avance</h6>
+                            <a class="btn" id="btnCloseAvoir"></a>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-1">
+                                <label for="inputFournisseur" class="form-label">Fournisseur</label>
+                                <select name="inputProduitEndette" th:value="${fournisseur.nomFournisseur}" id="inputFournisseur" class="form-select">
+                                    <option th:each="frs:${fournisseurList}" th:value="${frs.getNomFournisseur()}" th:text="${frs.getNomFournisseur()}"></option>
+                                </select>
+                            </div>
+                            <div class="mb-1">
+                                <label for="inputMontantDette" class="form-label">Montant</label>
+                                <input name="inputMontantDette" type="text" id="inputMontantDette" class="form-control">
+                            </div>
+                            <div class="mb-1">
+                                <label for="inputProduitEndette" class="form-label">Produit endetté</label>
+                                <select name="inputProduitEndette" th:value="${plp.nomProduit}" id="inputProduitEndette" class="form-select">
+                                    <option th:each="p:${produitPlusProduitList}" th:value="${p.getNomProduit()}" th:text="${p.getNomProduit()}"></option>
+                                </select>
+                            </div>
+                            <div class="mb-1">
+                                <label for="inputDescriptionDette" class="form-label">Déscription</label>
+                                <input name="inputDescriptionDette" type="text" id="inputDescriptionDette" class="form-control">
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="display: flex;justify-content: center">
+                            <button type="button" class="btn btn-danger" id="btnAnnulerAvance">Annuler</button>
+                            <button id="btnEnregistrerAvance" type="button" class="btn btn-primary">Accorder</button>
+                        </div>
+                    </form><!-- /.modal-content -->
+                </div>
+            </div>
+        </div>
         <!-- /.modal -->
+
+        <div id="modalPayeDetteFrs" class="modal modalEnc" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-content modal-contentEnc" style="width: 400px;height: 390px;margin-top: 80px;background: rgb(24,35,50);box-shadow: 0 0 10px rgba(200,200,200,0.9)">
+                <div class="container corpsprixSpecial" style="margin: 0">
+                    <form class="modal-content" style="background: none;border: none">
+                        <div class="modal-header" style="height: 50px">
+                            <h6 class="modal-title" id="standard-modalLabel" style="font-weight: 700;font-size: 14px;color: #aaa">REGLEMENT DU CREDIT</h6>
+                            <button type="button" id="btnCloseModalAvoir" class="btn-close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-0">
+                                <label id="labFrs" class="form-label"></label><br/>
+                                <label id="labNumAvance" class="form-label" ></label><br/>
+                                <label id="labDateAvance" class="form-label"></label>
+                            </div>
+                            <hr>
+                            <div class="mb-3">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="inputTotalDette" class="form-label">TOTAL : </label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input id="inputTotalDette" type="text" class="form-control" disabled/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="inputResteDette" class="form-label">RESTE : </label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input id="inputResteDette" type="text" class="form-control" disabled/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <label for="inputLivre" class="form-label">LIVRER : </label>
+                                        </div>
+                                        <div class="col-8">
+                                            <input id="inputLivre" type="text" class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="justify-content: center">
+                            <button id="btnAnnulerDetteModal" type="button" class="btn btn-danger" >Annuler</button>
+                            <button id="btnAccorderDetteModal" type="button" class="btn btn-primary btn-enregistrer">Accorder</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
     </div> <!-- container -->
 
@@ -142,6 +249,61 @@
     <script src="../js/main.js"></script>
 
     <script>
+
+        document.getElementById("btnCreerDette").addEventListener('click',function (){
+            document.getElementById("modalNouvelleAvance").style.display="flex";
+        })
+        document.getElementById("btnCloseAvoir").addEventListener('click',function (){
+            document.getElementById("modalNouvelleAvance").style.display="none";
+        })
+        document.getElementById("btnAnnulerAvance").addEventListener('click',function (){
+            document.getElementById("modalNouvelleAvance").style.display="none";
+        })
+
+        document.getElementById("btnAnnulerDetteModal").addEventListener('click',function (){
+            document.getElementById("modalPayeDetteFrs").style.display="none";
+        })
+        document.getElementById("btnCloseModalAvoir").addEventListener('click',function (){
+            document.getElementById("modalPayeDetteFrs").style.display="none";
+        })
+
+        document.getElementById("btnAccorderDetteModal").addEventListener('click',function (){
+            var nuDette;
+            var inputs = document.querySelectorAll('#checkBoxT'),
+                inputsLength = inputs.length;
+            for (var i = 0 ; i < inputsLength ; i++) {
+                if (inputs[i].type == 'radio' && inputs[i].checked) {
+
+                    var rowCol = inputs[i].parentNode.parentNode;
+                    nuDette = rowCol.querySelector('td:nth-child(1)')
+                }
+            }
+
+            //alert("id : "+nuDette.textContent+" , inputTotal : "+$("#inputTotalDette").val()+" , livre : "+$("#inputLivre").val())
+
+            var formDataCredit = {
+                idDette : nuDette.textContent,
+                montantDette : $("#inputTotalDette").val(),
+                montantPayeDette : $("#inputLivre").val(),
+            }
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url : "/SavePayeDetteP",
+                data : JSON.stringify(formDataCredit),
+                dataType : 'json',
+                success: function (result) {
+                    if (result.status === "success") {
+                        getAllDette();
+                        document.getElementById("modalPayeDetteFrs").style.display="none";
+                        document.getElementById("rowBtnSaveDette").style.display="none";
+                    }
+                },
+                error: function (e){
+                    alert("erreur d : "+e);
+                }
+            })
+        })
 
         /* *************************** filtrage du tableau par mot cle ************************************ */
         var inputSearch = document.getElementById("input-search-dette");
@@ -169,78 +331,122 @@
 
         /* -------------------------- default dette --------------------------------------- */
 
-        $.ajax({
-            type: "GET",
-            url: "/GetAllDette",
-            success: function (result) {
-                if (result.status === "success") {
-                    var tableFacAvoir = document.getElementById("tableDette");
-                    var tbodyFacA = tableFacAvoir.querySelector("tbody");
-                    tableFacAvoir.removeChild(tbodyFacA);
-                    var nouveauTbodyA = document.createElement("tbody");
-                    tableFacAvoir.appendChild(nouveauTbodyA);
-                    $.each(result.data, function (i, credit) {
+        getAllDette();
+        function getAllDette(){
+            $.ajax({
+                type: "GET",
+                url: "/GetAllDette",
+                success: function (result) {
+                    if (result.status === "success") {
+                        var tableFacAvoir = document.getElementById("tableDette");
+                        var tbodyFacA = tableFacAvoir.querySelector("tbody");
+                        tableFacAvoir.removeChild(tbodyFacA);
+                        var nouveauTbodyA = document.createElement("tbody");
+                        tableFacAvoir.appendChild(nouveauTbodyA);
 
-                        /*------------ convert date to normale ---------------- */
-                        let date0000 = credit.detteDate.toString();
-                        let da = date0000.substring(0, date0000.indexOf('.'));
-                        let date3 = new Date(da + "-03:00")
-                        let date4 = date3.toISOString();
-                        let date5 = date4.substring(0, date4.indexOf("."));
-                        let date6 = date5.replace("T", " ")
-                        /*--------- fin convert date to normale ---------------- */
+                        var tableFacAvoirD = document.getElementById("tableDetteImprimer");
+                        var tbodyFacAD = tableFacAvoirD.querySelector("tbody");
+                        tableFacAvoirD.removeChild(tbodyFacAD);
+                        var nouveauTbodyAD = document.createElement("tbody");
+                        tableFacAvoirD.appendChild(nouveauTbodyAD);
+                        $.each(result.data, function (i, credit) {
 
-                        var nouvelleLigneA = nouveauTbodyA.insertRow(-1);
+                            /*------------ convert date to normale ---------------- */
+                            let date0000 = credit.detteDate.toString();
+                            let da = date0000.substring(0, date0000.indexOf('.'));
+                            let date3 = new Date(da + "-03:00")
+                            let date4 = date3.toISOString();
+                            let date5 = date4.substring(0, date4.indexOf("."));
+                            let date6 = date5.replace("T", " ")
+                            /*--------- fin convert date to normale ---------------- */
 
-                        var nouvelleCelluleA = nouvelleLigneA.insertCell(0);
-                        var nouveauTexteA = document.createTextNode(credit.detteDesignation+""+credit.idDette);
-                        nouvelleCelluleA.appendChild(nouveauTexteA);
+                            var nouvelleLigneA = nouveauTbodyA.insertRow(-1);
 
-                        var nouvelleCelluleA1 = nouvelleLigneA.insertCell(1);
-                        var nouveauTexteA1 = document.createTextNode(credit.montantDette);
-                        nouvelleCelluleA1.appendChild(nouveauTexteA1);
+                            var nouvelleCelluleA = nouvelleLigneA.insertCell(0);
+                            var nouveauTexteA = document.createTextNode(credit.detteDesignation+""+credit.idDette);
+                            nouvelleCelluleA.appendChild(nouveauTexteA);
 
-                        var nouvelleCelluleA2 = nouvelleLigneA.insertCell(2);
-                        var nouveauTexteA2 = document.createTextNode(credit.detteFournisseur);
-                        nouvelleCelluleA2.appendChild(nouveauTexteA2);
+                            var nouvelleCelluleA1 = nouvelleLigneA.insertCell(1);
+                            var nouveauTexteA1 = document.createTextNode(credit.montantDette);
+                            nouvelleCelluleA1.appendChild(nouveauTexteA1);
 
-                        var nouvelleCelluleA3 = nouvelleLigneA.insertCell(3);
-                        var nouveauTexteA3 = document.createTextNode(date6);
-                        nouvelleCelluleA3.appendChild(nouveauTexteA3);
+                            var nouvelleCelluleA2 = nouvelleLigneA.insertCell(2);
+                            var nouveauTexteA2 = document.createTextNode(credit.detteFournisseur);
+                            nouvelleCelluleA2.appendChild(nouveauTexteA2);
 
-                        var nouvelleCelluleA4 = nouvelleLigneA.insertCell(4);
-                        var nouveauTexteA4 = document.createTextNode(credit.descriptionDette);
-                        nouvelleCelluleA4.appendChild(nouveauTexteA4);
+                            var nouvelleCelluleA3 = nouvelleLigneA.insertCell(3);
+                            var nouveauTexteA3 = document.createTextNode(date6);
+                            nouvelleCelluleA3.appendChild(nouveauTexteA3);
 
-                        var nouvelleCelluleA7 = nouvelleLigneA.insertCell(5);
-                        nouvelleCelluleA7.classList.add('ps-2');
-                        nouvelleCelluleA7.id = "checkBoxT";
-                        nouvelleCelluleA7.style.display="none";
-                        nouvelleCelluleA7.style.minWidth="14px";
-                        nouvelleCelluleA7.style.maxWidth="14px";
-                        var inputCredit = document.createElement("input");
-                        inputCredit.id="checkBoxT";
-                        inputCredit.type="radio";
-                        inputCredit.name="check";
-                        inputCredit.value="1";
-                        inputCredit.style.float="right";
-                        inputCredit.style.marginRight="10px";
-                        nouvelleCelluleA7.appendChild(inputCredit);
+                            var nouvelleCelluleA4 = nouvelleLigneA.insertCell(4);
+                            var nouveauTexteA4 = document.createTextNode(credit.descriptionDette);
+                            nouvelleCelluleA4.appendChild(nouveauTexteA4);
 
-                    });
+                            var nouveauTexteA5;
+                            var nouvelleCelluleA5 = nouvelleLigneA.insertCell(5);
+                            if (credit.montantDette === credit.montantPayDette) {
+                                nouveauTexteA5 = document.createTextNode("livrée");
+                                nouvelleCelluleA5.style.color="green";
+                            }else if (credit.montantDette > credit.montantPayDette){
+                                nouveauTexteA5 = document.createTextNode("non livrée");
+                                nouvelleCelluleA5.style.color="red";
+                            }
+                            nouvelleCelluleA5.appendChild(nouveauTexteA5);
+
+                            var nouvelleCelluleA7 = nouvelleLigneA.insertCell(6);
+                            nouvelleCelluleA7.classList.add('ps-2');
+                            nouvelleCelluleA7.id = "checkBoxT";
+                            nouvelleCelluleA7.style.display="none";
+                            nouvelleCelluleA7.style.minWidth="14px";
+                            nouvelleCelluleA7.style.maxWidth="14px";
+                            var inputCredit = document.createElement("input");
+                            inputCredit.id="checkBoxT";
+                            inputCredit.type="radio";
+                            inputCredit.name="check";
+                            inputCredit.value="1";
+                            inputCredit.style.float="right";
+                            inputCredit.style.marginRight="10px";
+                            nouvelleCelluleA7.appendChild(inputCredit);
+
+
+
+                            var nouvelleLigneAD = nouveauTbodyAD.insertRow(-1);
+
+                            var nouvelleCelluleAD = nouvelleLigneAD.insertCell(0);
+                            var nouveauTexteAD = document.createTextNode(credit.detteDesignation+""+credit.idDette);
+                            nouvelleCelluleAD.appendChild(nouveauTexteAD);
+
+                            var nouvelleCelluleA1D = nouvelleLigneAD.insertCell(1);
+                            var nouveauTexteA1D = document.createTextNode(credit.montantDette);
+                            nouvelleCelluleA1D.appendChild(nouveauTexteA1D);
+
+                            var nouvelleCelluleA2D = nouvelleLigneAD.insertCell(2);
+                            var nouveauTexteA2D = document.createTextNode(credit.detteFournisseur);
+                            nouvelleCelluleA2D.appendChild(nouveauTexteA2D);
+
+                            var nouvelleCelluleA3D = nouvelleLigneAD.insertCell(3);
+                            var nouveauTexteA3D = document.createTextNode(date6);
+                            nouvelleCelluleA3D.appendChild(nouveauTexteA3D);
+
+                            var nouvelleCelluleA4D = nouvelleLigneAD.insertCell(4);
+                            var nouveauTexteA4D = document.createTextNode(credit.descriptionDette);
+                            nouvelleCelluleA4D.appendChild(nouveauTexteA4D);
+
+                        });
+                    }
+                },
+                error: function (e){
+                    alert("Erreur liste credit : "+e);
                 }
-            },
-            error: function (e){
-                alert("Erreur liste credit : "+e);
-            }
-        });
+            });
+        }
 
         /* ------------------------ fin default dette ------------------------------------- */
 
     var btnReglerDette = document.getElementById("btnReglerDette");
     btnReglerDette.addEventListener('click',creerAvoirFacture);
     function creerAvoirFacture(){
-        if (btnReglerDette.textContent === "Règler une dette"){
+        /*if (btnReglerDette.textContent === "Règler une dette"){
             var idCheckBox = document.querySelectorAll("#checkBoxT");
             for (var i=0;i<idCheckBox.length;i++){
                 idCheckBox[i].style.display='';
@@ -257,40 +463,83 @@
             btnReglerDette.textContent="Règler une dette";
             btnReglerDette.classList.remove('btn-danger');
             btnReglerDette.classList.add('btn-primary');
+        }*/
+        var idCheckBox = document.querySelectorAll("#checkBoxT");
+        for (var i=0;i<idCheckBox.length;i++){
+            idCheckBox[i].style.display='';
         }
+        document.getElementById("rowBtnSaveDette").style.display="block";
     }
+    document.getElementById("annulerDette").addEventListener('click',function (){
+        var idCheckBox2 = document.querySelectorAll("#checkBoxT");
+        for (var j=0;j<idCheckBox2.length;j++){
+            idCheckBox2[j].style.display='none';
+            idCheckBox2[j].classList.add('unchecked')
+        }
+        var inputs = document.querySelectorAll('#checkBoxT'),
+            inputsLength = inputs.length;
+        for (var i = 0 ; i < inputsLength ; i++) {
+            if (inputs[i].type == 'radio') {
+                inputs[i].checked = false;
+            }
+        }
+        document.getElementById("rowBtnSaveDette").style.display="none";
+    })
 
-    /* *************************** filtrage du tableau ************************************ */
-    var inputSearch = document.getElementById("input-search-stock");
-    inputSearch.addEventListener("keyup",function(){
-        var keyword = this.value;
-        keyword = keyword.toUpperCase();
-        var table_3 = document.getElementById("datatable-buttons");
-        var all_tr = table_3.getElementsByTagName("tr");
-        for(var i=0; i<all_tr.length; i++){
-            var all_columns = all_tr[i].getElementsByTagName("td");
-            for(j=0;j<all_columns.length; j++){
-                if(all_columns[j]){
-                    var column_value = all_columns[j].textContent || all_columns[j].innerText;
-                    column_value = column_value.toUpperCase();
-                    if(column_value.indexOf(keyword) > -1){
-                        all_tr[i].style.display = ""; // show
-                        break;
-                    }else{
-                        all_tr[i].style.display = "none"; // hide
-                    }
+    /* ------------------- function check -------------------------------------------------- */
+        var labNomFrs = document.getElementById("labFrs");
+        var labNumAvance = document.getElementById("labNumAvance");
+        var labDateAvance = document.getElementById("labDateAvance");
+        var inputTotalDette = document.getElementById("inputTotalDette");
+        var inputResteDette = document.getElementById("inputResteDette");
+        var inputLivrer = document.getElementById("inputLivre");
+        var idDettePaye = 0;
+        function checkDette(){
+            document.getElementById("modalPayeDetteFrs").style.display="block";
+
+            var inputs = document.querySelectorAll('#checkBoxT'),
+                inputsLength = inputs.length;
+            for (var i = 0 ; i < inputsLength ; i++) {
+                if (inputs[i].type == 'radio' && inputs[i].checked) {
+
+                    var rowCol = inputs[i].parentNode.parentNode;
+                    let numDette = rowCol.querySelector('td:nth-child(1)')
+                    let dateDette = rowCol.querySelector('td:nth-child(4)')
+                    let avance = rowCol.querySelector('td:nth-child(2)')
+                    //let livrer = rowCol.querySelector('td:nth-child(4)')
+                    let reste = rowCol.querySelector('td:nth-child(5)')
+                    let idDette = rowCol.querySelector('td:nth-child(8)')
+
+                    labDateAvance.innerText = "Avance le : "+dateDette.textContent;
+                    labNomFrs.innerText = "Fournisseur : "+avance.textContent;
+                    labNumAvance.innerText = "Numéro : "+numDette.textContent;
+                    inputTotalDette.value = avance.textContent;
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/GetResteDette?numDette=" + numDette.textContent,
+                        success: function (result) {
+                            if (result.status === "success") {
+                                inputResteDette.value = result.data;
+                                console.log("reste : "+result.data);
+                            }
+                        },
+                        error: function (e) {
+                            alert("erreur 0 : " + e);
+                        }
+                    })
+
                 }
             }
         }
-    })
 
     /* ****************** print pageListe client *************************************** */
 
-    var boutonImprimerUser = document.getElementById("btnPrintUtilisateur");
+    var boutonImprimerUser = document.getElementById("btnPrintDette");
     boutonImprimerUser.addEventListener('click',printUserAction);
     function printUserAction() {
         printJS({
-            printable: 'datatable-utilisateurImprimer2',
+            printable: 'tableDetteImprimer2',
             type: 'html',
             targetStyles: ['*']
         });
@@ -298,11 +547,11 @@
 
     /* ********************** exporter tableClient vers excel ******************************** */
 
-    var boutonExcelUser = document.getElementById("btnExcelUtilisateur");
+    var boutonExcelUser = document.getElementById("btnExcelDette");
     boutonExcelUser.addEventListener('click',Export);
     function Export() {
-        $("#datatable-utilisateurImprimer2").table2excel({
-            filename: "Utilisateur_Liste "+new Date().getFullYear()+"-"+new Date().getMonth()+"-"+new Date().getDate()+" "+new Date().getHours()+"h"+new Date().getMinutes()+"min .xls"
+        $("#tableDetteImprimer").table2excel({
+            filename: "Liste_dette "+new Date().getFullYear()+"-"+new Date().getMonth()+"-"+new Date().getDate()+" "+new Date().getHours()+"h"+new Date().getMinutes()+"min .xls"
         });
     }
 </script>
